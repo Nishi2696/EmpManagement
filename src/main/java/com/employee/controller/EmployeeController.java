@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.employee.api.EmployeeApi;
 import com.employee.entity.Employee;
+import com.employee.model.ResponseMessage;
 import com.employee.service.EmployeeService;
 
 @RestController
@@ -54,44 +55,64 @@ public class EmployeeController implements EmployeeApi {
 	@Override
 	public ResponseEntity<Object> updateEmployee(String empid, Employee employee) {
 		logger.info("enter into getmployeeS");
+		ResponseMessage responseMessage = new ResponseMessage();
 		boolean check = false;
 		try {
 			check = employeeService.updateEmployee(empid, employee);
-			if (!check) {
-				return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+			if (check) {
+				responseMessage.setMessage("employee Updated");
+			}else {
+				responseMessage.setMessage("employee not Updated");	
+				return new ResponseEntity<>(responseMessage, HttpStatus.NOT_ACCEPTABLE);	
 			}
 		} catch (Exception e) {
+			responseMessage.setMessage("exception occur");
 			logger.error("unable to find all employees", e.getMessage());
-			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(responseMessage, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		logger.info("exit into getmployeeS");
-		return new ResponseEntity<>(HttpStatus.FOUND);
+		return new ResponseEntity<>(responseMessage, HttpStatus.FOUND);
 	}
 
 	@Override
 	public ResponseEntity<Object> deleteEmployee(String empid) {
 		logger.info("enter into getmployeeS");
+		ResponseMessage responseMessage = new ResponseMessage();
 		try {
-			employeeService.deleteEmployee(empid);
+			boolean deleteEmployee = employeeService.deleteEmployee(empid);
+			if (deleteEmployee) {
+				responseMessage.setMessage("employee Deleted");
+			}else {
+				responseMessage.setMessage("employee not Deleted");	
+			}
 		} catch (Exception e) {
+			responseMessage.setMessage("exception occur");
 			logger.error("unable to find all employees", e.getMessage());
-			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(responseMessage, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		logger.info("exit into getmployeeS");
-		return new ResponseEntity<>(HttpStatus.FOUND);
+		return new ResponseEntity<>(responseMessage, HttpStatus.ACCEPTED);
 	}
 
 	@Override
 	public ResponseEntity<Object> addEmployee(Employee employee) {
 		logger.info("enter into getmployeeS");
+		ResponseMessage responseMessage = new ResponseMessage();
 		try {
-			employeeService.addEmployee(employee);
+			boolean addEmployee = employeeService.addEmployee(employee);
+			if (addEmployee) {
+				responseMessage.setMessage("employee added");
+			}else {
+				responseMessage.setMessage("employee not added");	
+			}
 		} catch (Exception e) {
+			responseMessage.setMessage("exception occur");
 			logger.error("unable to find all employees", e.getMessage());
-			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(responseMessage, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		logger.info("exit into getmployeeS");
-		return new ResponseEntity<>(HttpStatus.FOUND);
+		return new ResponseEntity<>(responseMessage, HttpStatus.ACCEPTED);
 	}
+
 
 }

@@ -110,7 +110,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 		boolean check = false;
 		try {
 			List<Employee> findByEmailId = employeeRepository.findByEmailId(employee.getEmailId());
-		if(findByEmailId == null) {
+		if(findByEmailId.size() == 0) {
 			
 			employeeRepository.save(employee);
 			check = true;
